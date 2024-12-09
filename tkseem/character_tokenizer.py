@@ -15,11 +15,12 @@ class CharacterTokenizer(BaseTokenizer):
         Args:
             file_path (str): file to train
         """
-        print("Training CharacterTokenizer ...")
-        rx = re.compile(r"\B(.)")
+        print("Training CharacterTokenizer ... Updated")
+        rx = re.compile(r"(\S)")
 
-        text = open(file_path, "r", encoding=self.encoding).read()
+        text = open(file_path, "r").read()
         text = rx.sub(r" ##\1", text)
+        text = text.strip()
 
         tokens_frequency = defaultdict(int)
         for word in text.split(" "):
@@ -37,13 +38,16 @@ class CharacterTokenizer(BaseTokenizer):
         Returns:
             list: generated tokens
         """
-        rx = re.compile(r"\B(.)")
+        rx = re.compile(r"(\S)")
         text = rx.sub(r" ##\1", text)
+        text = text.strip()
+
         output_tokens = []
 
-        for token in text.split():
+        for token in text.split(" "):
             if token in self.vocab:
                 output_tokens.append(token)
             else:
                 output_tokens.append(self.unk_token)
+        
         return output_tokens
